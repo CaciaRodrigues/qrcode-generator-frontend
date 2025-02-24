@@ -9,7 +9,8 @@ export default function QRCodeGenerator() {
     const [qrCode, setQRCode] = useState<string>('');
 
     const generateQRCode = async () => {
-        const backendURL = process.env.REACT_APP_BACKEND_URL;  // Pegando a variável de ambiente
+        const backendURL = process.env.REACT_APP_BACKEND_URL || 'https://qrcode-generator-c4t1.onrender.com';
+
         try {
             const response = await fetch(`${backendURL}/generate_qr`, {  // Incluindo o endpoint correto
                 method: 'POST',
