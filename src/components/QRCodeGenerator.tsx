@@ -10,18 +10,31 @@ export default function QRCodeGenerator() {
 
     const generateQRCode = async () => {
         const backendURL = process.env.REACT_APP_BACKEND_URL;  // Pegando a variável de ambiente
-        const response = await fetch(`${backendURL}/generate_qr`, {  // Incluindo o endpoint correto
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text })
-        });
+        try {
+            const response = await fetch(`${backendURL}/generate_qr`, {  // Incluindo o endpoint correto
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
     
-        const data: QRCodeResponse = await response.json();
+            // Verificar se a resposta é bem-sucedida (código 200)
+            if (!response.ok) {
+                console.error('Failed to fetch QR code:', response.statusText);
+                return;
+            }
     
-        if (data.qr_code) {
-            setQRCode(`data:image/png;base64,${data.qr_code}`);
+            const data: QRCodeResponse = await response.json();
+    
+            if (data.qr_code) {
+                setQRCode(`data:image/png;base64,${data.qr_code}`);
+            } else {
+                console.log('QR code not received');
+            }
+        } catch (error) {
+            console.error('Error during QR code generation:', error);
         }
     };
+    
     
 
     return (
