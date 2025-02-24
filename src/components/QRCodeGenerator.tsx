@@ -9,18 +9,20 @@ export default function QRCodeGenerator() {
     const [qrCode, setQRCode] = useState<string>('');
 
     const generateQRCode = async () => {
-        const response = await fetch('https://qrcode-generator-c4t1.onrender.com', {
+        const backendURL = process.env.REACT_APP_BACKEND_URL;  // Pegando a variável de ambiente
+        const response = await fetch(`${backendURL}/generate_qr`, {  // Incluindo o endpoint correto
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text })
         });
-
+    
         const data: QRCodeResponse = await response.json();
-
+    
         if (data.qr_code) {
             setQRCode(`data:image/png;base64,${data.qr_code}`);
         }
     };
+    
 
     return (
         <div className="flex items-center justify-center h-screen bg-dark-color p-3">
